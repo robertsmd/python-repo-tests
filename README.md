@@ -7,7 +7,7 @@ wget https://raw.githubusercontent.com/robertsmd/python-repo-tests/master/.gitig
 wget https://raw.githubusercontent.com/robertsmd/python-repo-tests/master/run_tests.sh
 mkdir requirements
 cd requirements
-wget https://raw.githubusercontent.com/robertsmd/python-repo-tests/master/requirements/testing-requirements.txt
+wget https://raw.githubusercontent.com/robertsmd/python-repo-tests/master/requirements/testing_requirements.txt
 wget https://raw.githubusercontent.com/robertsmd/python-repo-tests/master/requirements/requirements.txt
 cd ..
 
