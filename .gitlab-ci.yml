@@ -1,0 +1,48 @@
+image: python:latest
+
+stages:
+  - build
+  - test
+  - deploy
+
+variables:
+  VARIABLE1: variable1
+
+before_script:
+  - python -V
+
+.before_test: &before_test |
+  # Create a virtualenv with docker-compose installed
+  python -m virtualenv test_venv
+  source test_venv/bin/activate
+
+.after_test: &after_test |
+  rm -rf test_venv
+
+python_tests:
+    stage: build
+    script:
+     - ./run_tests.sh
+    artifacts:
+        expire_in: 1 week
+
+test:
+    stage: test
+    before_script:
+      - *before_test
+      - pip3 install -r requirements/requirements.txt
+    script:
+      - python deleteme.py > output.txt
+    after_script:
+      - *after_test
+    artifacts:
+        paths:
+          - output.txt
+        expire_in: 1 week
+
+deploy:
+    stage: deploy
+    script:
+      - rm output.txt
+    artifacts:
+        expire_in: 1 week   

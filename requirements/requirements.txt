@@ -1,0 +1,2 @@
+# put requirements used by python code here.
+# these will be installed before running coverage tests.
