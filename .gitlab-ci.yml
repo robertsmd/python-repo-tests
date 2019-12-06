@@ -6,10 +6,11 @@ stages:
   - deploy
 
 variables:
-  VARIABLE1: variable1
+  REGISTRY_URL: registry.docker.com:5000
 
 before_script:
   - python -V
+  - docker -v
 
 .before_test: &before_test |
   # Create a virtualenv with docker-compose installed
@@ -19,6 +20,7 @@ before_script:
 .after_test: &after_test |
   rm -rf test_venv
 
+# Python tasks
 python_tests:
     stage: build
     script:
@@ -45,4 +47,33 @@ deploy:
     script:
       - rm output.txt
     artifacts:
-        expire_in: 1 week   
+        expire_in: 1 week
+# /Python tasks
+
+# # Docker tasks
+# docker_build:
+#     stage: build
+#     script:
+#      - docker build -t $REGISTRY_URL/container -f Dockerfile .
+#     artifacts:
+#         expire_in: 1 week
+
+# regression:
+#     stage: test
+#     script:
+#      - export CONTAINER_NAME=$(docker ps -a | grep $HOSTNAME-build | awk '{print $NF}')
+#      - export VOLUME_NAME=$(docker inspect --format '{{range .Mounts}}{{if eq .Destination "/builds"}}{{.Source}}{{end}}{{end}}' $CONTAINER_NAME)
+#      - export MOUNT_BASE=$VOLUME_NAME/$CI_PROJECT_PATH
+#      - docker inspect $CONTAINER_NAME
+#      - env
+#      - docker run --rm -v $MOUNT_BASE:/ $REGISTRY_URL/container echo "hello world"
+#     artifacts:
+#         expire_in: 1 week
+
+# docker_push:
+#     stage: deploy
+#     script:
+#      - docker push $REGISTRY_URL/container
+#     artifacts:
+#         expire_in: 1 week
+# # /Docker tasks
